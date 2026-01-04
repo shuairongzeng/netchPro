@@ -438,7 +438,7 @@ namespace Netch.Forms.ModeForms
             this.HandleLabel.Padding = new System.Windows.Forms.Padding(7);
             this.HandleLabel.Size = new System.Drawing.Size(95, 31);
             this.HandleLabel.TabIndex = 0;
-            this.HandleLabel.Text = "Handle rules";
+            this.HandleLabel.Text = "Handle rules (走代理)";
             // 
             // HandleSelectButton
             // 
@@ -519,7 +519,7 @@ namespace Netch.Forms.ModeForms
             this.BypassLabel.Padding = new System.Windows.Forms.Padding(7);
             this.BypassLabel.Size = new System.Drawing.Size(95, 31);
             this.BypassLabel.TabIndex = 0;
-            this.BypassLabel.Text = "Bypass rules";
+            this.BypassLabel.Text = "Bypass rules (不走代理)";
             // 
             // BypassSelectButton
             // 
