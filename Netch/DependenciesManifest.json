@@ -1,0 +1,62 @@
+{
+  "$schema": "./DependenciesManifest.schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-04",
+  "binaries": {
+    "Redirector.bin": {
+      "description": "Traffic interception via Netfilter SDK",
+      "version": "1.0.0",
+      "platform": "win-x64",
+      "hash": "",
+      "required": true
+    },
+    "RouteHelper.bin": {
+      "description": "Windows routing table manipulation",
+      "version": "1.0.0",
+      "platform": "win-x64",
+      "hash": "",
+      "required": true
+    },
+    "tun2socks.bin": {
+      "description": "TUN virtual adapter proxy",
+      "version": "1.0.0",
+      "platform": "win-x64",
+      "hash": "",
+      "required": true
+    },
+    "aiodns.bin": {
+      "description": "Async DNS resolver",
+      "version": "1.0.0",
+      "platform": "win-x64",
+      "hash": "",
+      "required": true
+    },
+    "v2ray-sn.exe": {
+      "description": "V2Ray SagerNet core",
+      "version": "1.0.0",
+      "platform": "win-x64",
+      "hash": "",
+      "required": true
+    },
+    "nfapi.dll": {
+      "description": "Netfilter API library",
+      "version": "1.0.0",
+      "platform": "win-x64",
+      "hash": "",
+      "required": true
+    },
+    "nfdriver.sys": {
+      "description": "Netfilter kernel driver",
+      "version": "1.0.0",
+      "platform": "win-x64",
+      "hash": "",
+      "required": true
+    }
+  },
+  "capabilities": {
+    "processMode": ["Redirector.bin", "nfapi.dll", "nfdriver.sys"],
+    "tunMode": ["tun2socks.bin", "RouteHelper.bin"],
+    "shareMode": [],
+    "protocols": ["v2ray-sn.exe"]
+  }
+}

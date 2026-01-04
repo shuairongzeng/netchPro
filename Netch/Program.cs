@@ -62,6 +62,15 @@ public static class Program
         // load configuration
         Configuration.LoadAsync().Wait();
 
+        // check dependencies
+        var depChecker = new DependencyChecker(Path.Combine(Global.NetchDir, "bin"));
+        var depResult = depChecker.CheckDependenciesAsync().GetAwaiter().GetResult();
+        if (!depResult.IsValid)
+        {
+            Log.Warning("Missing required dependencies: {Dependencies}",
+                string.Join(", ", depResult.MissingRequired));
+        }
+
         // check if the program is already running
         if (!SingleInstance.TryStartSingleInstance())
         {
