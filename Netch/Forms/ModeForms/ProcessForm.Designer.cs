@@ -427,7 +427,7 @@ namespace Netch.Forms.ModeForms
             this.HandleHelperFlowLayoutPanel.Controls.Add(this.HandleScanButton);
             this.HandleHelperFlowLayoutPanel.Location = new System.Drawing.Point(3, 3);
             this.HandleHelperFlowLayoutPanel.Name = "HandleHelperFlowLayoutPanel";
-            this.HandleHelperFlowLayoutPanel.Size = new System.Drawing.Size(269, 32);
+            this.HandleHelperFlowLayoutPanel.Size = new System.Drawing.Size(350, 32);
             this.HandleHelperFlowLayoutPanel.TabIndex = 0;
             // 
             // HandleLabel
@@ -508,7 +508,7 @@ namespace Netch.Forms.ModeForms
             this.BypassFlowLayoutPanel.Controls.Add(this.BypassScanButton);
             this.BypassFlowLayoutPanel.Location = new System.Drawing.Point(3, 3);
             this.BypassFlowLayoutPanel.Name = "BypassFlowLayoutPanel";
-            this.BypassFlowLayoutPanel.Size = new System.Drawing.Size(269, 32);
+            this.BypassFlowLayoutPanel.Size = new System.Drawing.Size(350, 32);
             this.BypassFlowLayoutPanel.TabIndex = 0;
             // 
             // BypassLabel
