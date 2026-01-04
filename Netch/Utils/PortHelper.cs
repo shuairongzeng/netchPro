@@ -7,6 +7,8 @@ using Windows.Win32;
 using Windows.Win32.NetworkManagement.IpHelper;
 using Netch.Models;
 
+#pragma warning disable CA1416 // Validate platform compatibility
+
 namespace Netch.Utils;
 
 public static class PortHelper
@@ -42,22 +44,28 @@ public static class PortHelper
                 {
                     uint err;
                     uint size = 0;
-                    PInvoke.GetExtendedTcpTable(default, ref size, false, (uint)inet, TCP_TABLE_CLASS.TCP_TABLE_OWNER_PID_LISTENER, 0); // get size
-                    var tcpTable = (MIB_TCPTABLE_OWNER_PID*)Marshal.AllocHGlobal((int)size);
+                    // Get required buffer size
+                    PInvoke.GetExtendedTcpTable(Span<byte>.Empty, ref size, false, (uint)inet, TCP_TABLE_CLASS.TCP_TABLE_OWNER_PID_LISTENER, 0);
+                    var buffer = new byte[size];
 
-                    if ((err = PInvoke.GetExtendedTcpTable(tcpTable, ref size, false, (uint)inet, TCP_TABLE_CLASS.TCP_TABLE_OWNER_PID_LISTENER, 0)) !=
-                        0)
-                        throw new Win32Exception((int)err);
-
-                    for (var i = 0; i < tcpTable -> dwNumEntries; i++)
+                    fixed (byte* pBuffer = buffer)
                     {
-                        var row = tcpTable -> table.ReadOnlyItemRef(i);
+                        if ((err = PInvoke.GetExtendedTcpTable(new Span<byte>(pBuffer, (int)size), ref size, false, (uint)inet, TCP_TABLE_CLASS.TCP_TABLE_OWNER_PID_LISTENER, 0)) != 0)
+                            throw new Win32Exception((int)err);
 
-                        if (row.dwOwningPid is 0 or 4)
-                            continue;
+                        var tcpTable = (MIB_TCPTABLE_OWNER_PID*)pBuffer;
+                        var rowPtr = (MIB_TCPROW_OWNER_PID*)(&tcpTable->table);
 
-                        if (PInvoke.ntohs((ushort)row.dwLocalPort) == port)
-                            process.Add(Process.GetProcessById((int)row.dwOwningPid));
+                        for (var i = 0; i < tcpTable->dwNumEntries; i++)
+                        {
+                            var row = rowPtr[i];
+
+                            if (row.dwOwningPid is 0 or 4)
+                                continue;
+
+                            if (PInvoke.ntohs((ushort)row.dwLocalPort) == port)
+                                process.Add(Process.GetProcessById((int)row.dwOwningPid));
+                        }
                     }
                 }
 

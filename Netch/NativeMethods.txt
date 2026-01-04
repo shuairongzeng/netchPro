@@ -25,4 +25,5 @@ ntohs
 inet_pton
 
 // Windows.h
-// WIN32_ERROR
+WIN32_ERROR
+NTSTATUS

@@ -1,11 +1,14 @@
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Windows.Win32.Foundation;
 using Windows.Win32.Networking.WinSock;
 using Windows.Win32.NetworkManagement.IpHelper;
 using static Windows.Win32.PInvoke;
 
 namespace Netch.Interops;
+
+#pragma warning disable CA1416 // Validate platform compatibility
 
 public static unsafe class RouteHelper
 {
@@ -28,13 +31,13 @@ public static unsafe class RouteHelper
 
         if (inet == AddressFamily.InterNetwork)
         {
-            addr.Address.Ipv4.sin_family = (ushort)ADDRESS_FAMILY.AF_INET;
+            addr.Address.Ipv4.sin_family = ADDRESS_FAMILY.AF_INET;
             if (inet_pton((int)inet, address, &addr.Address.Ipv4.sin_addr) == 0)
                 return false;
         }
         else if (inet == AddressFamily.InterNetworkV6)
         {
-            addr.Address.Ipv6.sin6_family = (ushort)ADDRESS_FAMILY.AF_INET6;
+            addr.Address.Ipv6.sin6_family = ADDRESS_FAMILY.AF_INET6;
             if (inet_pton((int)inet, address, &addr.Address.Ipv6.sin6_addr) == 0)
                 return false;
         }
@@ -52,10 +55,10 @@ public static unsafe class RouteHelper
         {
             if (type != MIB_NOTIFICATION_TYPE.MibInitialNotification)
             {
-                NTSTATUS state;
-                if ((state = GetUnicastIpAddressEntry(row)) != 0)
+                var state = GetUnicastIpAddressEntry(row);
+                if (state != 0)
                 {
-                    Log.Error("GetUnicastIpAddressEntry failed: {State}", state.Value);
+                    Log.Error("GetUnicastIpAddressEntry failed: {State}", (int)state);
                     return;
                 }
 
@@ -74,14 +77,14 @@ public static unsafe class RouteHelper
             }
         }
 
-        NotifyUnicastIpAddressChange((ushort)ADDRESS_FAMILY.AF_INET, Callback, null, new BOOLEAN(byte.MaxValue), ref handle);
+        NotifyUnicastIpAddressChange(ADDRESS_FAMILY.AF_INET, Callback, null, new BOOLEAN(byte.MaxValue), ref handle);
 
         try
         {
-            NTSTATUS state;
-            if ((state = CreateUnicastIpAddressEntry(&addr)) != 0)
+            var state = CreateUnicastIpAddressEntry(&addr);
+            if (state != 0)
             {
-                Log.Error("CreateUnicastIpAddressEntry failed: {State}", state.Value);
+                Log.Error("CreateUnicastIpAddressEntry failed: {State}", (int)state);
                 return false;
             }
 
